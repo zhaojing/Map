@@ -8,12 +8,18 @@
 
 #import "ViewController.h"
 #import "BMKMapView.h"
+#import "BMKSearch.h"
+#import "BMKPointAnnotation.h"
 
-@interface ViewController ()<BMKMapViewDelegate>
+@interface ViewController ()<BMKMapViewDelegate,BMKSearchDelegate>
 {
     BMKMapView *_mapView;
     
+    BMKSearch * _mapSearch;
+    
     BOOL       _firstLocated;
+    
+
 }
 
 @end
@@ -23,6 +29,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [_mapView viewWillAppear];
+    
     _mapView.delegate = self;
 }
 
@@ -40,6 +47,21 @@
     
     _mapView.showsUserLocation = YES;
     
+    //搜素兴趣点
+    
+    _mapSearch = [[BMKSearch alloc]init];
+    
+    _mapSearch.delegate = self;
+    
+    BOOL boolPoiSeachSuccess =[_mapSearch poiSearchInCity:@"西安" withKey:@"肯德基" pageIndex:0];
+    
+    if (boolPoiSeachSuccess)
+    {
+        NSLog(<#NSString *format, ...#>)
+    }
+   
+    
+        
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -53,6 +75,8 @@
     [_mapView viewWillDisappear];
     
     _mapView.delegate = nil;
+    
+    _mapSearch.delegate = nil;
 }
 
 /**************************************************************************************/
@@ -98,6 +122,35 @@
 - (void)mapView:(BMKMapView *)mapView didFailToLocateUserWithError:(NSError *)error
 {
     NSLog(@"location error");
+}
+
+
+/**************************************************************************************/
+
+#pragma mark -
+#pragma mark BMKMapViewDelegate Delegate
+#pragma mark -
+
+/**************************************************************************************/
+
+- (void)onGetPoiResult:(NSArray*)poiResultList searchType:(int)type errorCode:(int)error
+{
+    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+	[_mapView removeAnnotations:array];
+
+    if (error == BMKErrorOk)
+    {
+        BMKPoiResult* result = [poiResultList objectAtIndex:0];
+        for (int i = 0; i < result.poiInfoList.count; i++)
+        {
+            BMKPoiInfo* poi = [result.poiInfoList objectAtIndex:i];
+            BMKPointAnnotation* item = [[BMKPointAnnotation alloc]init];
+            item.coordinate = poi.pt;
+            item.title = poi.name;
+            [_mapView addAnnotation:item];
+        }
+
+    }
 }
 
 @end
