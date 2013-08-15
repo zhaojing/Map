@@ -12,8 +12,8 @@
 @interface ViewController ()<BMKMapViewDelegate>
 {
     BMKMapView *_mapView;
-
     
+    BOOL       _firstLocated;
 }
 
 @end
@@ -26,28 +26,78 @@
     _mapView.delegate = self;
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    _firstLocated = YES;
+    
     _mapView= [[BMKMapView alloc]initWithFrame:self.view.frame];
+    
+    _mapView.region = BMKCoordinateRegionMake(_mapView.userLocation.coordinate, BMKCoordinateSpanMake(0.1, 0.1)) ;
+    
     self.view = _mapView;
     
-	// Do any additional setup after loading the view, typically from a nib.
+    _mapView.showsUserLocation = YES;
+    
+    // Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [_mapView viewWillDisappear];
-    _mapView.delegate = nil;
     
+    _mapView.delegate = nil;
+}
+
+/**************************************************************************************/
+
+
+#pragma mark -
+#pragma mark Input Parameters
+#pragma mark -
+
+
+/**************************************************************************************/
+
+
+ 
+
+/**************************************************************************************/
+
+#pragma mark -
+#pragma mark BMKMapViewDelegate Delegate
+#pragma mark -
+
+/**************************************************************************************/
+
+/*
+ 定位到用户的位置
+ */
+- (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation
+{
+    if (_firstLocated)
+    {
+        CLLocationCoordinate2D userCoords = CLLocationCoordinate2DMake(userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude);
+        
+        [_mapView setRegion:BMKCoordinateRegionMake(userCoords, BMKCoordinateSpanMake(0.1, 0.1)) animated:YES];
+        
+        _firstLocated = NO;
+    }
+ }
+
+/*
+ 定位失败
+ */
+
+- (void)mapView:(BMKMapView *)mapView didFailToLocateUserWithError:(NSError *)error
+{
+    NSLog(@"location error");
 }
 
 @end
