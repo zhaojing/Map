@@ -10,6 +10,7 @@
 #import "BMKMapView.h"
 #import "BMKSearch.h"
 #import "BMKPointAnnotation.h"
+#import "FistViewController.h"
 
 @interface ViewController ()<BMKMapViewDelegate,BMKSearchDelegate>
 {
@@ -19,6 +20,7 @@
     
     BOOL       _firstLocated;
     
+    FistViewController *_firstviewController ;
 
 }
 
@@ -30,6 +32,7 @@
 {
     [_mapView viewWillAppear];
     
+    
     _mapView.delegate = self;
 }
 
@@ -37,6 +40,9 @@
 {
     [super viewDidLoad];
     
+    _firstviewController = [[FistViewController alloc]initWithNibName:@"FistViewController" bundle:nil];
+    
+
     _firstLocated = YES;
     
     _mapView= [[BMKMapView alloc]initWithFrame:self.view.frame];
@@ -57,10 +63,12 @@
     
     if (boolPoiSeachSuccess)
     {
-        NSLog(<#NSString *format, ...#>)
+        NSLog(@"search success.");
     }
-   
-    
+    else
+    {
+        NSLog(@"search failed!");
+    }
         
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -88,7 +96,6 @@
 
 
 /**************************************************************************************/
-
 
  
 
@@ -118,10 +125,17 @@
 /*
  定位失败
  */
-
 - (void)mapView:(BMKMapView *)mapView didFailToLocateUserWithError:(NSError *)error
 {
     NSLog(@"location error");
+}
+
+/*
+ 点击气泡
+*/
+- (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view
+{
+    [self.navigationController pushViewController:_firstviewController animated:YES];
 }
 
 
