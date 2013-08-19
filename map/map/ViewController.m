@@ -51,26 +51,14 @@
     
     self.view = _mapView;
     
-    _mapView.showsUserLocation = YES;
+   _mapView.showsUserLocation = YES;
     
     //搜素兴趣点
     
     _mapSearch = [[BMKSearch alloc]init];
     
     _mapSearch.delegate = self;
-    
-    BOOL boolPoiSeachSuccess =[_mapSearch poiSearchInCity:@"西安" withKey:@"肯德基" pageIndex:0];
-    
-    if (boolPoiSeachSuccess)
-    {
-        NSLog(@"search success.");
-    }
-    else
-    {
-        NSLog(@"search failed!");
-    }
-        
-    // Do any additional setup after loading the view, typically from a nib.
+  
 }
 
 - (void)didReceiveMemoryWarning
@@ -119,7 +107,23 @@
         [_mapView setRegion:BMKCoordinateRegionMake(userCoords, BMKCoordinateSpanMake(0.1, 0.1)) animated:YES];
         
         _firstLocated = NO;
+        
+  
+        BOOL boolPoiSeachSuccess =[_mapSearch poiSearchInCity:@"西安" withKey:@"麦当劳" pageIndex:0];
+        
+        if (boolPoiSeachSuccess)
+        {
+            NSLog(@"search success.");
+        }
+        else
+        {
+            NSLog(@"search failed!");
+        }
+
+        
     }
+
+   
  }
 
 /*
