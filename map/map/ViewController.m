@@ -11,8 +11,10 @@
 #import "BMKSearch.h"
 #import "BMKPointAnnotation.h"
 #import "FistViewController.h"
+#import "BMKPinAnnotationView.h"
 
-@interface ViewController ()<BMKMapViewDelegate,BMKSearchDelegate>
+@interface ViewController ()<BMKMapViewDelegate,
+BMKSearchDelegate,UIAlertViewDelegate>
 {
     BMKMapView *_mapView;
     
@@ -50,6 +52,7 @@
     _mapView.region = BMKCoordinateRegionMake(_mapView.userLocation.coordinate, BMKCoordinateSpanMake(0.1, 0.1)) ;
     
     self.view = _mapView;
+    
     
     _mapView.showsUserLocation = YES;
     
@@ -98,16 +101,14 @@
     {
         
         UIAlertView *aler = [[UIAlertView alloc]initWithTitle:@"sorry"
-                                                      message:@"网络差请稍后重试" delegate:nil cancelButtonTitle:@"取消"
+                                                      message:@"网络差请稍后重试"
+                                                     delegate:nil
+                                            cancelButtonTitle:@"取消"
                                             otherButtonTitles:@"重试" ,nil];
         [aler show];
         NSLog(@"search failed!");
     }
-    
-    
 }
-
-
 
 
 /**************************************************************************************/
@@ -121,6 +122,7 @@
 /*
  定位到用户的位置
  */
+
 - (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation
 {
     if (_firstLocated)
@@ -131,17 +133,13 @@
         
         _firstLocated = NO;
         
-        double delayInSeconds = 2.0;
+        double delayInSeconds = 4.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self _searchPoi];
         });
     }
-     
 }
-
-
-
 
 /*
  定位失败
@@ -159,6 +157,49 @@
     [self.navigationController pushViewController:_firstviewController animated:YES];
 }
 
+/*
+ 气泡View重写
+ */
+
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
+{
+    if ([annotation isKindOfClass:[BMKPointAnnotation class]])
+    {
+        BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
+        newAnnotationView.canShowCallout = YES;
+        newAnnotationView.pinColor = BMKPinAnnotationColorPurple;
+        newAnnotationView.animatesDrop = YES;// 设置该标注点动画显示
+        return newAnnotationView;
+    }
+    return nil;
+}
+
+- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view
+{
+
+
+}
+
+/**************************************************************************************/
+
+#pragma mark -
+#pragma mark UIalertView Delegate 用来以防定位失败
+#pragma mark -
+
+/**************************************************************************************/
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _searchPoi];
+        });
+    }
+}
 
 /**************************************************************************************/
 
@@ -184,8 +225,30 @@
             item.title = poi.name;
             [_mapView addAnnotation:item];
         }
-        
     }
+}
+
+/**************************************************************************************/
+
+#pragma mark -
+#pragma mark UIResponder Delegate
+#pragma mark -
+
+/**************************************************************************************/
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+
+
+
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+
+    
+
+
 }
 
 @end
