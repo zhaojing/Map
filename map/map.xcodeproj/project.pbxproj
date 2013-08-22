@@ -26,6 +26,7 @@
 		D0A3527C17BC79850091B0A0 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D0A3527B17BC79850091B0A0 /* mapapi.bundle */; };
 		D0A352A817BCD9CF0091B0A0 /* FistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0A352A617BCD9CF0091B0A0 /* FistViewController.m */; };
 		D0A352A917BCD9CF0091B0A0 /* FistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0A352A717BCD9CF0091B0A0 /* FistViewController.xib */; };
+		D0B7CECF17C33DAE0030FB59 /* tabbar_home_down.png in Resources */ = {isa = PBXBuildFile; fileRef = D0B7CECE17C33DAE0030FB59 /* tabbar_home_down.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,7 @@
 		D0A352A517BCD9CF0091B0A0 /* FistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FistViewController.h; sourceTree = "<group>"; };
 		D0A352A617BCD9CF0091B0A0 /* FistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FistViewController.m; sourceTree = "<group>"; };
 		D0A352A717BCD9CF0091B0A0 /* FistViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FistViewController.xib; sourceTree = "<group>"; };
+		D0B7CECE17C33DAE0030FB59 /* tabbar_home_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabbar_home_down.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 				D0A3524117BC75550091B0A0 /* Default.png */,
 				D0A3524317BC75550091B0A0 /* Default@2x.png */,
 				D0A3524517BC75550091B0A0 /* Default-568h@2x.png */,
+				D0B7CECE17C33DAE0030FB59 /* tabbar_home_down.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				D0A3524C17BC75550091B0A0 /* ViewController.xib in Resources */,
 				D0A3527C17BC79850091B0A0 /* mapapi.bundle in Resources */,
 				D0A352A917BCD9CF0091B0A0 /* FistViewController.xib in Resources */,
+				D0B7CECF17C33DAE0030FB59 /* tabbar_home_down.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

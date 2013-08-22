@@ -21,7 +21,7 @@
     BOOL       _firstLocated;
     
     FistViewController *_firstviewController ;
-
+    
 }
 
 @end
@@ -42,7 +42,7 @@
     
     _firstviewController = [[FistViewController alloc]initWithNibName:@"FistViewController" bundle:nil];
     
-
+    
     _firstLocated = YES;
     
     _mapView= [[BMKMapView alloc]initWithFrame:self.view.frame];
@@ -51,14 +51,14 @@
     
     self.view = _mapView;
     
-   _mapView.showsUserLocation = YES;
+    _mapView.showsUserLocation = YES;
     
     //搜素兴趣点
     
     _mapSearch = [[BMKSearch alloc]init];
     
     _mapSearch.delegate = self;
-  
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,7 +85,30 @@
 
 /**************************************************************************************/
 
- 
+-(void)_searchPoi
+{
+    
+    BOOL boolPoiSeachSuccess =[_mapSearch poiSearchInCity:@"西安" withKey:@"麦当劳" pageIndex:0];
+    
+    if (boolPoiSeachSuccess)
+    {
+        NSLog(@"search success.");
+    }
+    else
+    {
+        
+        UIAlertView *aler = [[UIAlertView alloc]initWithTitle:@"sorry"
+                                                      message:@"网络差请稍后重试" delegate:nil cancelButtonTitle:@"取消"
+                                            otherButtonTitles:@"重试" ,nil];
+        [aler show];
+        NSLog(@"search failed!");
+    }
+    
+    
+}
+
+
+
 
 /**************************************************************************************/
 
@@ -108,23 +131,17 @@
         
         _firstLocated = NO;
         
-  
-        BOOL boolPoiSeachSuccess =[_mapSearch poiSearchInCity:@"西安" withKey:@"麦当劳" pageIndex:0];
-        
-        if (boolPoiSeachSuccess)
-        {
-            NSLog(@"search success.");
-        }
-        else
-        {
-            NSLog(@"search failed!");
-        }
-
-        
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _searchPoi];
+        });
     }
+     
+}
 
-   
- }
+
+
 
 /*
  定位失败
@@ -136,7 +153,7 @@
 
 /*
  点击气泡
-*/
+ */
 - (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view
 {
     [self.navigationController pushViewController:_firstviewController animated:YES];
@@ -155,7 +172,7 @@
 {
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
 	[_mapView removeAnnotations:array];
-
+    
     if (error == BMKErrorOk)
     {
         BMKPoiResult* result = [poiResultList objectAtIndex:0];
@@ -167,7 +184,7 @@
             item.title = poi.name;
             [_mapView addAnnotation:item];
         }
-
+        
     }
 }
 
